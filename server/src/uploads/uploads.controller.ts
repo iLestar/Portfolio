@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Post,
   UploadedFile,
@@ -40,11 +41,18 @@ export class UploadsController {
       limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB tope (un .indd pesa)
       fileFilter: (_req, file, cb) => {
         const ext = extname(file.originalname).toLowerCase()
-        cb(null, ALLOWED.has(ext))
+        // Rechazar con 400 legible: cb(null, false) dejaría file=undefined
+        // y el endpoint explotaría con un 500 crudo.
+        if (!ALLOWED.has(ext)) {
+          cb(new BadRequestException(`Tipo de archivo no permitido: ${ext || '(sin extensión)'}`), false)
+          return
+        }
+        cb(null, true)
       },
     }),
   )
   upload(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('No se recibió archivo')
     // name = nombre original: el admin lo usa como etiqueta del adjunto.
     return { url: `/uploads/${file.filename}`, name: file.originalname }
   }
