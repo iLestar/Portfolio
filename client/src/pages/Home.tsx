@@ -1,12 +1,19 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n'
-import { featured } from '../data/projects'
+import { getFeatured } from '../api'
+import type { Project } from '../data/projects'
 import Marquee from '../components/Marquee'
 import ProjectCard from '../components/ProjectCard'
 
 // Home — dirección C: titular que sangra, marquee, pósters inclinados.
 export default function Home() {
   const { t } = useI18n()
+  const [featured, setFeatured] = useState<Project[]>([])
+
+  useEffect(() => {
+    getFeatured().then(setFeatured)
+  }, [])
 
   return (
     <>

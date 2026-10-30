@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useI18n } from '../i18n'
-import { getProject } from '../data/projects'
+import { getProject } from '../api'
+import type { Project } from '../data/projects'
 import PlaceholderImage from '../components/PlaceholderImage'
 import NotFound from './NotFound'
 
@@ -9,9 +11,14 @@ import NotFound from './NotFound'
 export default function ProjectDetail() {
   const { slug } = useParams()
   const { t, pick } = useI18n()
-  const project = slug ? getProject(slug) : undefined
+  const [project, setProject] = useState<Project | null | undefined>(undefined)
 
-  if (!project) return <NotFound />
+  useEffect(() => {
+    if (slug) getProject(slug).then((p) => setProject(p ?? null))
+  }, [slug])
+
+  if (project === undefined) return null // cargando
+  if (project === null) return <NotFound />
 
   return (
     <article className="wrap page detail">

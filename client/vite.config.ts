@@ -8,6 +8,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:3000',
+      // Las imágenes subidas por el admin también viven en el backend
+      '/uploads': 'http://localhost:3000',
     },
   },
 })

@@ -1,11 +1,28 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n'
+import { sendContact } from '../api'
 
-// Formulario real — por ahora solo valida y avisa;
-// el POST a /api/contact llega con el backend (etapa 5).
+// Formulario real → POST /api/contact (los mensajes caen en MySQL
+// y se leen en el panel, sección Mensajes).
 export default function Contact() {
   const { t } = useI18n()
-  const [sent, setSent] = useState(false)
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setState('sending')
+    const data = new FormData(e.currentTarget)
+    try {
+      await sendContact({
+        name: String(data.get('name')),
+        email: String(data.get('email')),
+        message: String(data.get('message')),
+      })
+      setState('sent')
+    } catch {
+      setState('error')
+    }
+  }
 
   return (
     <section className="wrap page">
@@ -13,13 +30,7 @@ export default function Contact() {
       <p className="page__intro">{t.contact.intro}</p>
 
       <div className="contact">
-        <form
-          className="form"
-          onSubmit={(e) => {
-            e.preventDefault()
-            setSent(true)
-          }}
-        >
+        <form className="form" onSubmit={onSubmit}>
           <label className="form__field">
             <span className="mono">{t.contact.name}</span>
             <input type="text" name="name" required autoComplete="name" />
@@ -32,11 +43,17 @@ export default function Contact() {
             <span className="mono">{t.contact.message}</span>
             <textarea name="message" rows={6} required />
           </label>
-          <button type="submit" className="btn btn--primary">
-            {t.contact.send} →
+          <button type="submit" className="btn btn--primary" disabled={state === 'sending' || state === 'sent'}>
+            {state === 'sending' ? '…' : `${t.contact.send} →`}
           </button>
-          {sent && <p className="mono">{t.contact.pendingNote}</p>}
-          <p className="mono">{t.contact.pendingNote}</p>
+          {state === 'sent' && (
+            <p className="mono form__ok">Mensaje enviado. Te respondo pronto.</p>
+          )}
+          {state === 'error' && (
+            <p className="mono form__error">
+              No se pudo enviar — el servidor no responde. Escríbeme por redes.
+            </p>
+          )}
         </form>
 
         <aside>

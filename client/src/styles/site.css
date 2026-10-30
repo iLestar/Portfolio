@@ -485,3 +485,78 @@
   .process__step { grid-template-columns: 1fr; gap: 1rem; }
   .process__rail { display: flex; align-items: baseline; gap: 0.8rem; }
 }
+
+
+/* ============ ADMIN ============ */
+
+.admin-login { max-width: 30rem; }
+.admin-bar { display: flex; gap: 1.2rem; align-items: center; }
+.admin-bar__link {
+  color: var(--blue-soft);
+  border-bottom: 1px solid transparent;
+  padding: 0.2rem 0;
+}
+.admin-bar__link:hover { color: var(--purple); border-bottom-color: var(--purple); }
+.admin-bar__link.danger { color: #e86a6a; }
+.admin-new { margin-top: 2rem; }
+.admin-list { list-style: none; padding: 0; margin-top: 1.5rem; }
+.admin-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.admin-list__item--block { align-items: flex-start; }
+.admin-list__info { display: flex; flex-direction: column; gap: 0.3rem; }
+.admin-list__info p { color: var(--muted); max-width: 60ch; }
+.admin-list__actions { display: flex; gap: 1rem; flex-shrink: 0; }
+
+.admin-form { max-width: 46rem; }
+.admin-form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+.admin-form__checks { display: flex; gap: 2rem; }
+.admin-form__checks label { display: flex; gap: 0.5rem; align-items: center; cursor: pointer; }
+.admin-img-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.admin-thumb {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.admin-sections {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.admin-sections legend { padding-inline: 0.5rem; color: var(--blue-soft); }
+.admin-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px dashed var(--line);
+}
+.admin-section:last-child { border-bottom: 0; padding-bottom: 0; }
+.admin-section h3 { color: var(--blue-soft); }
+.form__field select {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+}
+.form__error { color: #e86a6a; }
+.form__ok { color: #6ae89a; }

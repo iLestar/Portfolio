@@ -1,17 +1,23 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useI18n } from '../i18n'
-import { CATEGORIES, projects } from '../data/projects'
-import type { Category } from '../data/projects'
+import { getProjects } from '../api'
+import { CATEGORIES } from '../data/projects'
+import type { Category, Project } from '../data/projects'
 import ProjectCard from '../components/ProjectCard'
 
 // Índice filtrable — lectura rápida para el reclutador.
 export default function Projects() {
   const { t } = useI18n()
+  const [items, setItems] = useState<Project[]>([])
   const [filter, setFilter] = useState<Category | null>(null)
 
+  useEffect(() => {
+    getProjects().then(setItems)
+  }, [])
+
   const visible = useMemo(
-    () => (filter ? projects.filter((p) => p.category === filter) : projects),
-    [filter],
+    () => (filter ? items.filter((p) => p.category === filter) : items),
+    [items, filter],
   )
 
   return (

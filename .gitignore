@@ -9,3 +9,4 @@ Thumbs.db
 
 # Archivos subidos por el admin (producción los guarda el server)
 server/uploads
+*.tsbuildinfo
