@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Monograma Lestar, concepto A: L con chispa">
+  <rect width="512" height="512" rx="96" fill="#02020a"/>
+  <!-- L geométrica -->
+  <path d="M136 104h80v208h136v64H136z" fill="#eef0ff"/>
+  <!-- Chispa / estrella de 4 puntas (Lestar = L + star) -->
+  <path d="M372 92q18 48 66 66-48 18-66 66-18-48-66-66 48-18 66-66z" fill="#b03dea"/>
+</svg>

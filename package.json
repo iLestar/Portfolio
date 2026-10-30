@@ -1,0 +1,12 @@
+{
+  "name": "lestar-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Portafolio de Let (Lestar) — diseño gráfico. React + NestJS + MySQL.",
+  "scripts": {
+    "dev:db": "docker compose up -d",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run start:dev",
+    "seed": "npm --prefix server run seed"
+  }
+}
