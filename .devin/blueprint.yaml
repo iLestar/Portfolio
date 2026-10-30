@@ -1,0 +1,27 @@
+# https://docs.devin.ai/onboard-devin/environment-yaml
+# Entorno del monorepo: deps de client/ y server/ + .env + MySQL por docker-compose.
+initialize: |
+  # Credenciales dev del servidor; nunca sobreescribe un .env existente
+  (cd server && [ -f .env ] || cp .env.example .env)
+maintenance: |
+  (cd client && npm install)
+  (cd server && npm install)
+knowledge:
+  - name: run
+    contents: |
+      docker compose up -d && (cd server && npm run seed) # una vez
+      (cd server && npm run start:dev) # :3000
+      (cd client && npm run dev)       # :5173
+  - name: lint
+    contents: |
+      (cd client && npx tsc -b && npx oxlint)
+      (cd server && npx tsc -b)
+  - name: build
+    contents: |
+      (cd client && npx vite build)
+      (cd server && npm run build)
+  - name: notes
+    contents: |
+      Admin en /admin con ADMIN_USER/ADMIN_PASSWORD de server/.env.
+      MySQL 8.4 en docker-compose (db portfolio, user lestar / lestar_dev).
+      Necesita Node 20 (.nvmrc).

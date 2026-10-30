@@ -560,3 +560,17 @@
 }
 .form__error { color: #e86a6a; }
 .form__ok { color: #6ae89a; }
+
+/* ---------- Adjuntos (PDF, INDD…) ---------- */
+.attach { margin-top: 3rem; }
+.attach__title { color: var(--blue-soft); font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.attach__list { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem; }
+.attach__link {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.7rem 1.1rem;
+  color: var(--white);
+  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+.attach__link:hover { border-color: var(--purple); color: var(--purple); }

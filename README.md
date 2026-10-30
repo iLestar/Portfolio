@@ -74,7 +74,7 @@ Abre http://localhost:5173 — el panel está en http://localhost:5173/admin
 3. Elige **tipo de ficha**:
    - *Resultado final* → solo resumen + texto + portada.
    - *Proceso completo* → además habilita las secciones Briefing → Bocetos → Decisiones → Resultado, cada una con imagen y texto ES/EN.
-4. Sube la portada (JPG/PNG/WebP/AVIF, máx. 15 MB).
+4. Sube la portada (JPG/PNG/WebP/AVIF) y, si quieres, **archivos adjuntos** (PDF, INDD, IDML, AI, PSD, ZIP — máx. 100 MB c/u; se muestran como enlaces descargables en la ficha, el PDF se abre en el visor del navegador).
 5. Marca *Destacado* para que salga en la home, *Publicado* para que sea visible.
 6. Guardar. Listo — ya está en `/proyectos` y en su URL `/proyectos/<slug>`.
 

@@ -12,6 +12,12 @@ export interface Localized {
   en: string
 }
 
+// Adjunto descargable de la ficha (PDF, INDD, AI…).
+export interface Attachment {
+  url: string
+  name: string
+}
+
 // Una sección de la ficha "proceso completo":
 // briefing → bocetos → decisiones → resultado.
 export interface ProcessSection {
@@ -31,6 +37,7 @@ export interface Project {
   summary: Localized
   body?: Localized
   sections?: ProcessSection[] // solo cuando kind === 'process'
+  attachments?: Attachment[] // enlaces descargables (PDF, INDD…)
   featured?: boolean
 }
 

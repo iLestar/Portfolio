@@ -115,7 +115,7 @@ export const admin = {
   async upload(file: File) {
     const form = new FormData()
     form.append('file', file)
-    return request<{ url: string }>('/upload', authInit({
+    return request<{ url: string; name: string }>('/upload', authInit({
       method: 'POST',
       body: form,
     }))
@@ -143,6 +143,7 @@ export interface ProjectPayload {
   bodyEs: string | null
   bodyEn: string | null
   sections: { key: ProcessSection['key']; image: string | null; es: string; en: string }[] | null
+  attachments: { url: string; name: string }[] | null
   featured: boolean
   published: boolean
   sortOrder: number

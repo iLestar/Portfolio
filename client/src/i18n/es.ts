@@ -48,6 +48,7 @@ const es = {
       resultado: 'Resultado',
     },
     gallery: 'Galería',
+    files: 'Archivos',
   },
   about: {
     title: 'Sobre mí',

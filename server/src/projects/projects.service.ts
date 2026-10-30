@@ -25,6 +25,7 @@ function toApi(p: Project) {
         image: s.image ?? undefined,
         body: { es: s.es, en: s.en },
       })) ?? undefined,
+    attachments: p.attachments ?? undefined,
     featured: p.featured,
     published: p.published,
     sortOrder: p.sortOrder,

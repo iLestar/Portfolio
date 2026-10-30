@@ -84,6 +84,22 @@ export default function ProjectDetail() {
           ))}
         </div>
       )}
+
+      {project.attachments && project.attachments.length > 0 && (
+        <div className="attach">
+          <h2 className="mono attach__title">{t.project.files}</h2>
+          <ul className="attach__list">
+            {project.attachments.map((a) => (
+              <li key={a.url}>
+                {/* PDF se abre en el visor del navegador; INDD/AI/PSD se descargan */}
+                <a className="attach__link mono" href={a.url} target="_blank" rel="noreferrer">
+                  {a.name} ↗
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </article>
   )
 }
