@@ -49,6 +49,7 @@ const en: Dict = {
       resultado: 'Result',
     },
     gallery: 'Gallery',
+    files: 'Files',
   },
   about: {
     title: 'About',

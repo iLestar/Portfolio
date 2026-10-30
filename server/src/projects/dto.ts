@@ -32,6 +32,15 @@ export class SectionDto {
   en: string
 }
 
+export class AttachmentDto {
+  @IsString()
+  url: string
+
+  @IsString()
+  @MaxLength(200)
+  name: string
+}
+
 export class CreateProjectDto {
   @IsString()
   @MinLength(2)
@@ -83,6 +92,12 @@ export class CreateProjectDto {
   sections: SectionDto[] | null = null
 
   @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AttachmentDto)
+  attachments: AttachmentDto[] | null = null
+
+  @IsOptional()
   @IsBoolean()
   featured: boolean = false
 
@@ -110,6 +125,8 @@ export class UpdateProjectDto {
   @IsOptional() @IsString() bodyEn?: string | null
   @IsOptional() @IsArray() @ValidateNested({ each: true }) @Type(() => SectionDto)
   sections?: SectionDto[] | null
+  @IsOptional() @IsArray() @ValidateNested({ each: true }) @Type(() => AttachmentDto)
+  attachments?: AttachmentDto[] | null
   @IsOptional() @IsBoolean() featured?: boolean
   @IsOptional() @IsBoolean() published?: boolean
   @IsOptional() @IsInt() sortOrder?: number

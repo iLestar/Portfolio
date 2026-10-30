@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { admin } from '../../api'
 import type { AdminProject, ProjectPayload } from '../../api'
-import type { ProcessSection } from '../../data/projects'
+import type { Attachment, ProcessSection } from '../../data/projects'
 
 const SECTION_KEYS = ['briefing', 'bocetos', 'decisiones', 'resultado'] as const
 const CATEGORIES = ['branding', 'ilustracion', 'editorial', 'otros'] as const
@@ -20,6 +20,7 @@ interface FormState {
   bodyEs: string
   bodyEn: string
   sections: { key: ProcessSection['key']; image: string | null; es: string; en: string }[]
+  attachments: Attachment[]
   featured: boolean
   published: boolean
   sortOrder: number
@@ -38,6 +39,7 @@ const empty: FormState = {
   bodyEs: '',
   bodyEn: '',
   sections: SECTION_KEYS.map((key) => ({ key, image: null, es: '', en: '' })),
+  attachments: [],
   featured: false,
   published: true,
   sortOrder: 0,
@@ -66,6 +68,7 @@ function toForm(p: AdminProject): FormState {
         en: s?.body.en ?? '',
       }
     }),
+    attachments: p.attachments ?? [],
     featured: p.featured,
     published: p.published,
     sortOrder: p.sortOrder,
@@ -112,6 +115,20 @@ export default function ProjectForm() {
     }
   }
 
+  // Adjunta cualquier archivo permitido (PDF, INDD, AI, PSD, ZIP)
+  // y lo agrega a la lista con su nombre original como etiqueta.
+  async function uploadAttachment(file: File) {
+    setUploading(file.name)
+    try {
+      const { url, name } = await admin.upload(file)
+      set('attachments', [...f.attachments, { url, name }])
+    } catch (e) {
+      setError(`Subida falló: ${e}`)
+    } finally {
+      setUploading('')
+    }
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
@@ -130,6 +147,7 @@ export default function ProjectForm() {
       bodyEn: f.bodyEn || null,
       // Las secciones solo viajan si la ficha es de proceso
       sections: f.kind === 'process' ? f.sections : null,
+      attachments: f.attachments.length ? f.attachments : null,
       featured: f.featured,
       published: f.published,
       sortOrder: f.sortOrder,
@@ -312,6 +330,31 @@ export default function ProjectForm() {
             ))}
           </fieldset>
         )}
+
+        <fieldset className="admin-sections">
+          <legend className="mono">Archivos adjuntos (PDF, INDD, AI, PSD, ZIP)</legend>
+          {f.attachments.map((a, i) => (
+            <div key={a.url} className="admin-img-row">
+              <span className="mono">{a.name}</span>
+              <button
+                type="button"
+                className="mono admin-bar__link danger"
+                onClick={() => set('attachments', f.attachments.filter((_, j) => j !== i))}
+              >
+                Quitar
+              </button>
+            </div>
+          ))}
+          <input
+            type="file"
+            accept=".pdf,.indd,.idml,.ai,.psd,.zip"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) uploadAttachment(file)
+              e.target.value = ''
+            }}
+          />
+        </fieldset>
 
         <div className="admin-form__checks">
           <label className="mono">

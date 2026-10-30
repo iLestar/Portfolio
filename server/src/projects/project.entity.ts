@@ -8,6 +8,12 @@ export interface ProcessSectionRow {
   en: string
 }
 
+// Adjunto descargable de la ficha (PDF, INDD, AI, PSD…).
+export interface AttachmentRow {
+  url: string
+  name: string
+}
+
 // Espejo del modelo del frontend (client/src/data/projects.ts):
 // lo plano vive en columnas; lo bilingüe se aplana en *_es / *_en.
 @Entity('projects')
@@ -53,6 +59,9 @@ export class Project {
 
   @Column('json', { nullable: true })
   sections: ProcessSectionRow[] | null
+
+  @Column('json', { nullable: true })
+  attachments: AttachmentRow[] | null
 
   @Column({ type: 'boolean', default: false })
   featured: boolean
