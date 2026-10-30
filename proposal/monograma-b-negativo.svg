@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Monograma Lestar, concepto B: estrella en negativo dentro de la L">
+  <rect width="512" height="512" rx="96" fill="#02020a"/>
+  <!-- L geométrica en azul de marca -->
+  <path d="M136 104h80v208h136v64H136z" fill="#2753cc"/>
+  <!-- Estrella de 4 puntas tallada en negativo en el pie de la L -->
+  <path d="M316 314q8 22 30 30-22 8-30 30-8-22-30-30 22-8 30-30z" fill="#02020a"/>
+</svg>

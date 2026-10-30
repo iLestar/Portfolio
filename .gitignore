@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Archivos subidos por el admin (producción los guarda el server)
+server/uploads
