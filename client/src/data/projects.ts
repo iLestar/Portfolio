@@ -4,12 +4,23 @@
 // por fetch() a la API; el modelo de abajo ES el esquema MySQL.
 // ============================================================
 
-export type Category = 'branding' | 'ilustracion' | 'editorial' | 'otros'
+export type Category = 'branding' | 'ilustracion' | 'editorial' | 'fotografia' | 'retoque' | 'desarrollo' | 'otros'
 export type ProjectKind = 'result' | 'process'
 
 export interface Localized {
   es: string
   en: string
+}
+
+export interface Contributor {
+  name: string
+  url: string | null
+}
+
+// Adjunto descargable de la ficha (PDF, INDD, AI…).
+export interface Attachment {
+  url: string
+  name: string
 }
 
 // Una sección de la ficha "proceso completo":
@@ -25,16 +36,24 @@ export interface Project {
   title: string
   year: number
   category: Category
+  categories?: Category[]
+  credits?: Localized
+  contributors?: Contributor[]
+  gallery?: { url: string; es: string; en: string }[]
+  documentUrl?: string | null
+  translationStatus?: string
+  translationError?: string | null
   kind: ProjectKind
   cover?: string // sin valor → placeholder
   tools: string[]
   summary: Localized
   body?: Localized
   sections?: ProcessSection[] // solo cuando kind === 'process'
+  attachments?: Attachment[] // enlaces descargables (PDF, INDD…)
   featured?: boolean
 }
 
-export const CATEGORIES: Category[] = ['branding', 'ilustracion', 'editorial', 'otros']
+export const CATEGORIES: Category[] = ['branding', 'editorial', 'ilustracion', 'fotografia', 'retoque', 'desarrollo', 'otros']
 
 export const projects: Project[] = [
   {

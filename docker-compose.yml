@@ -2,6 +2,18 @@
 # Uso: `docker compose up -d` (requiere Docker Desktop en Windows).
 # Credenciales SOLO de desarrollo — producción usa variables de entorno.
 services:
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    container_name: lestar-translate
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:5000:5000'
+    environment:
+      LT_LOAD_ONLY: en,es
+      LT_UPDATE_MODELS: 'true'
+    volumes:
+      - lestar_translate_models:/home/libretranslate/.local:rw
+
   mysql:
     image: mysql:8.4
     container_name: lestar-mysql
@@ -17,4 +29,5 @@ services:
       - lestar_mysql:/var/lib/mysql
 
 volumes:
+  lestar_translate_models:
   lestar_mysql:

@@ -9,11 +9,16 @@ const en: Dict = {
     dev: 'Dev',
     contact: 'Contact',
     langLabel: 'Language',
+    skip: 'Skip to content',
+    home: 'Lestar — home',
+    label: 'Main',
   },
   home: {
+    role: 'Graphic design',
+    statementFirst: 'between letters',
+    statementLast: 'and images.',
     claim:
-      'Graphic designer in training with a strong filter: branding, editorial and illustration. ' +
-      'Only work that passed my own bar makes it here.',
+      "I'm Juan Guillermo, also known as Lestar. I'm studying graphic design, with a particular interest in vector illustration. I also hold a qualification in software development: creating a video game has always been one of my goals.",
     ctaProjects: 'See projects',
     ctaContact: "Let's talk",
     featuredTitle: 'Selected',
@@ -28,6 +33,9 @@ const en: Dict = {
       ilustracion: 'Illustration',
       editorial: 'Editorial',
       otros: 'Other',
+      fotografia: 'Photography',
+      retoque: 'Photo retouching',
+      desarrollo: 'Web development',
     },
   },
   project: {
@@ -49,66 +57,62 @@ const en: Dict = {
       resultado: 'Result',
     },
     gallery: 'Gallery',
+    files: 'Files',
   },
   about: {
     title: 'About',
     bio:
-      "I'm Let — also Lestar. Graphic designer in training " +
-      '(Technical degree as Graphic Design Assistant, 2nd semester) and a ' +
-      'Software Development technologist. I design brands, editorial pieces ' +
-      'and illustration with the same obsession I code with: ' +
-      'structure first, detail always.',
+      "I'm Juan Guillermo Gómez, though online people know me as Lestar. Illustration is what I enjoy most about design: Illustrator is the tool I connect with most and want to keep exploring.\n\n" +
+      'My introduction to graphic design began with vocational classes at school. After graduating, I chose to study software development to pursue a long-standing goal: creating a video game. Later, I returned to studying design, bringing those two interests together.\n\n' +
+      "I'm currently studying to become a Graphic Design Assistant at CESDE. I've completed my second semester and will begin my third in early 2027.\n\n" +
+      "I like my work to feel polished. This portfolio brings together the pieces I consider my strongest and shows what I've learned in illustration, composition, image editing and editorial design.",
     educationTitle: 'Education',
     education: [
       {
-        title: 'Technical degree — Graphic Design Assistant',
-        detail: 'In progress · 2nd semester of 3',
+        title: 'Graphic Design Assistant · CESDE',
+        detail: 'Second semester completed · Third semester expected in January or February 2027',
       },
       {
-        title: 'Software Development Technologist',
-        detail: 'Completed · 6 months of full-stack internship',
+        title: 'Software Analysis and Development Technologist · SENA',
+        detail: 'Graduated in 2023',
       },
     ],
     toolsTitle: 'Tools',
-    tools: ['Illustrator', 'Photoshop', 'InDesign', 'Branding', 'Briefing'],
-    devNote: 'I also code: React, NestJS, MySQL. → See Dev section',
-    photoAlt: 'Photo of Let',
+    tools: ['Illustrator', 'Photoshop', 'InDesign'],
+    devNote: 'My previous training in software development ↗',
   },
   services: {
-    title: 'Services',
-    intro: '[TBD · LET] What I can do for you:',
+    title: 'Illustration and design',
+    intro: 'Vector illustration is my main interest. I am looking for employment in graphic design and am also open to freelance commissions.',
     items: [
       {
-        title: 'Identity & Branding',
-        desc: 'Logo, visual system and brand manual. From brief to final files.',
+        title: 'Vector illustration',
+        desc: 'My main focus: building images through shape, colour and composition in Illustrator. Illustrations and graphic pieces with a clear visual intent.',
       },
       {
-        title: 'Editorial',
-        desc: 'Publications, newspapers, layout and page systems.',
+        title: 'Posters and image editing',
+        desc: 'Poster composition, digital collage and image treatment in Illustrator and Photoshop.',
       },
       {
-        title: 'Illustration & Posters',
-        desc: 'Pieces with character: posters, covers, graphics for music and culture.',
+        title: 'Editorial design',
+        desc: 'Layouts for publications, brochures and informational pieces in InDesign, with attention to typographic hierarchy and the relationship between text and images.',
       },
       {
-        title: 'Web development',
-        desc: 'Sites and apps where the design survives pixel by pixel.',
+        title: 'Brand identity',
+        desc: 'Visual proposals, monograms and brand boards developed from a brief that guides design decisions.',
       },
     ],
   },
   dev: {
-    title: 'Development',
+    title: 'Technical background',
     intro:
-      'Software Development technologist with 6 months of full-stack ' +
-      'internship. This section is my technical profile: what I know, ' +
-      'how I work, and what I built for this very site.',
-    stackTitle: 'This site runs on',
-    stack: ['React + TypeScript', 'NestJS', 'MySQL', 'Vite', 'Custom token-based CSS'],
+      'I graduated from SENA in Software Analysis and Development in 2023. This training is part of my background; my current professional focus is graphic design and illustration.',
+    stackTitle: 'Technologies from my previous experience',
+    stack: ['React', 'Node.js', 'Express', 'NestJS', 'Vue', 'MySQL', 'MariaDB', 'MongoDB', 'Figma'],
     thisSite:
-      'This portfolio is my case study: React frontend, NestJS API, ' +
-      'MySQL database and a custom admin panel.',
-    reposTitle: 'Repositories',
-    reposNote: '[TBD · LET] GitHub links',
+      'During my internships, I contributed to an intranet application for SENA and a migration from MongoDB to MariaDB at Divergente Soluciones Inteligente SAS.',
+    reposTitle: 'My current focus',
+    reposNote: 'I want to keep growing in vector illustration and graphic design. Software development is part of my previous training, but is not a service I currently offer.',
   },
   contact: {
     title: 'Contact',
@@ -117,14 +121,14 @@ const en: Dict = {
     email: 'Email',
     message: 'Message',
     send: 'Send',
-    pendingNote:
-      '[PENDING] Sending goes live with the backend (stage 5). For now, reach me on social.',
+    sending: 'Sending…',
+    sent: "Message sent. I'll get back to you soon.",
+    error: 'Your message could not be sent. Please try again later.',
+    publicEmail: 'jggomez016@gmail.com',
     socialsTitle: 'Social',
     socials: [
-      { name: 'Instagram', url: '#' },
-      { name: 'Behance', url: '#' },
-      { name: 'LinkedIn', url: '#' },
-      { name: 'GitHub', url: '#' },
+      { name: 'Instagram', url: 'https://www.instagram.com/illestar_/' },
+      { name: 'LinkedIn', url: 'https://www.linkedin.com/in/juangui-gomez/' },
     ],
   },
   notFound: {
@@ -133,8 +137,8 @@ const en: Dict = {
     back: '← Back home',
   },
   footer: {
-    made: 'Designed and coded by Lestar',
-    rights: 'All work is mine. No stock.',
+    made: 'Portfolio of Juan Guillermo Gómez · Lestar',
+    rights: 'Selected academic and personal projects.',
   },
 }
 

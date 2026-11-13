@@ -35,6 +35,7 @@ export default function App() {
             <Route path="admin/panel" element={<Dashboard />} />
             <Route path="admin/panel/nuevo" element={<ProjectForm />} />
             <Route path="admin/panel/editar/:id" element={<ProjectForm />} />
+            <Route path="admin/panel/vista-previa/:id" element={<ProjectDetail preview />} />
             <Route path="admin/panel/mensajes" element={<Messages />} />
           </Route>
 

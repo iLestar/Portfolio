@@ -51,7 +51,7 @@ export default function Dashboard() {
             <div className="admin-list__info">
               <strong>{p.title}</strong>
               <span className="mono">
-                {p.category} · {p.year} · {p.kind}
+                {p.category} · {p.year}
                 {p.featured ? ' · ★' : ''}
                 {!p.published ? ' · borrador' : ''}
               </span>

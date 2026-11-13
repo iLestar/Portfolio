@@ -1,5 +1,18 @@
 # Lo que falta preparar — checklist para Let
 
+## Orden de trabajo acordado
+
+1. **Cargar los trabajos reales.** Localizar los archivos, seleccionar las piezas y preparar cada ficha con portada, resultado o proceso, textos ES/EN y adjuntos. Revisar que cada proyecto guardado se vea correctamente en el sitio.
+2. **Rediseñar la identidad visual.** Con los proyectos cargados, trabajar monograma, tipografía, color, composición y presentación de las piezas, incluyendo móvil.
+3. **Desplegar.** Cuando la presentación visual esté lista, cerrar dominio, configuración de producción y publicación.
+
+### Primera etapa: trabajos
+- [ ] Localizar la carpeta con los trabajos y elegir el primero.
+- [ ] Comprobar el acceso al panel y la conexión con MySQL.
+- [ ] Preparar portada y piezas visibles en formatos de imagen; conservar PDF y archivos editables como adjuntos cuando corresponda.
+- [ ] Cargar cada ficha y verificar que sus imágenes, textos y descargas se hayan guardado.
+- [ ] Elegir los proyectos destacados para la home.
+
 ## Contenido
 - [ ] **Carpeta de proyectos organizada.** Una carpeta por proyecto con: `final/` (la pieza terminada en JPG/PNG/WebP) y `proceso/` (brief, bocetos, iteraciones, descartes). Si un proyecto es solo resultado, basta `final/`.
 - [ ] **Bio definitiva ES** (la EN la adapto yo de la tuya). 3–6 líneas, tu voz.

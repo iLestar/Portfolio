@@ -28,7 +28,7 @@ export default function Messages() {
             <div className="admin-list__info">
               <strong>{m.name}</strong>
               <a className="mono" href={`mailto:${m.email}`}>{m.email}</a>
-              <p>{m.body}</p>
+              <p className="preserve-lines">{m.body}</p>
               <span className="mono">{new Date(m.createdAt).toLocaleString()}</span>
             </div>
           </li>

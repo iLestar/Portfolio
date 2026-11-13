@@ -74,7 +74,7 @@ Abre http://localhost:5173 — el panel está en http://localhost:5173/admin
 3. Elige **tipo de ficha**:
    - *Resultado final* → solo resumen + texto + portada.
    - *Proceso completo* → además habilita las secciones Briefing → Bocetos → Decisiones → Resultado, cada una con imagen y texto ES/EN.
-4. Sube la portada (JPG/PNG/WebP/AVIF, máx. 15 MB).
+4. Sube la portada (JPG/PNG/WebP/AVIF) y, si quieres, **archivos adjuntos** (PDF, INDD, IDML, AI, PSD, ZIP — máx. 100 MB c/u; se muestran como enlaces descargables en la ficha, el PDF se abre en el visor del navegador).
 5. Marca *Destacado* para que salga en la home, *Publicado* para que sea visible.
 6. Guardar. Listo — ya está en `/proyectos` y en su URL `/proyectos/<slug>`.
 
@@ -94,6 +94,33 @@ Abre http://localhost:5173 — el panel está en http://localhost:5173/admin
 - **Frontend:** `npm --prefix client run build` → `client/dist/` estático (Vercel, Netlify, Cloudflare Pages gratis).
 - **Backend:** `npm --prefix server run build && npm --prefix server run start:prod` + MySQL gestionada (Railway, Render, un VPS…).
 - En producción: `synchronize: false` en `server/src/app.module.ts` y credenciales reales por variables de entorno.
+
+## Traducción automática local
+
+Ejecuta `docker compose up -d libretranslate` y configura en `server/.env`:
+
+```env
+TRANSLATE_URL=http://127.0.0.1:5000/translate
+```
+
+Reinicia la API después de cambiar `.env`. La primera ejecución descarga los modelos de español e inglés;
+se conservan en el volumen `lestar_translate_models`. El puerto 5000 solo es accesible desde el equipo local.
+Al guardar un proyecto se traducen resumen, descripción, créditos y pies de imagen.
+La lista de integrantes y sus enlaces no se envían al traductor; los créditos en texto sí se traducen.
+Si el servicio falla, se conserva el español y el inglés anterior; el aviso de guardado muestra el motivo.
+Los proyectos anteriores deben volver a guardarse para traducirse con la nueva configuración.
+Las traducciones marcadas como revisadas se conservan al guardar mientras no cambien
+los textos originales en español ni la selección de imágenes. Si cambia el contenido,
+se vuelve a generar la traducción y debe revisarse de nuevo.
+
+## Respaldo local
+
+Con Docker Desktop y MySQL activos, ejecuta `npm run backup` desde la raíz.
+El comando guarda un ZIP fechado en `D:\Descargas\Documents\RespaldosPortfolio` con la base MySQL,
+`server/uploads`, instrucciones de restauración y un manifiesto de hashes SHA-256.
+Verifica cada archivo del ZIP antes de dar el respaldo por terminado.
+Para otra ubicación: `npm run backup -- -Destination "D:\OtraCarpeta"`.
+El respaldo contiene los datos y archivos subidos; el código y la configuración `.env` se conservan por separado.
 
 ## Pendientes conocidos
 
