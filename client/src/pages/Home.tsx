@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n'
 import { getFeatured } from '../api'
 import type { Project } from '../data/projects'
-import Marquee from '../components/Marquee'
 import ProjectCard from '../components/ProjectCard'
 
-// Home — dirección C: titular que sangra, marquee, pósters inclinados.
+// Lestar: expressive typography, personal signature and selected work.
 export default function Home() {
   const { t } = useI18n()
   const [featured, setFeatured] = useState<Project[]>([])
@@ -17,9 +16,10 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero">
+      <section className="hero hero--expressive">
         <div className="wrap">
-          <h1 className="hero__title grad-text">LESTAR</h1>
+          <p className="hero__eyebrow mono">Juan Guillermo Gómez / {t.home.role}</p>
+          <h1 className="hero__title">LESTAR<span className="hero__statement">{t.home.statementFirst}<br />{t.home.statementLast}</span></h1>
           <div className="hero__row">
             <p className="hero__claim">{t.home.claim}</p>
             <div className="hero__ctas">
@@ -32,10 +32,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Marquee text={t.home.disciplines} />
       </section>
 
-      <section className="wrap featured">
+      <section className="wrap featured expressive-featured">
         <h2 className="section-title">
           {t.home.featuredTitle}
           <span className="section-title__num mono">
@@ -48,10 +47,10 @@ export default function Home() {
               key={p.slug}
               project={p}
               index={i}
-              tilt={i % 2 === 0 ? 'a' : 'b'}
             />
           ))}
         </div>
+        <Link className="home-all mono" to="/proyectos">{t.home.ctaProjects} ↗</Link>
       </section>
     </>
   )

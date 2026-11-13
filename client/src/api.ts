@@ -4,7 +4,7 @@
 // el portafolio no se cae aunque el servidor esté apagado.
 // ============================================================
 import { projects as localProjects, getProject as localGet } from './data/projects'
-import type { ProcessSection, Project } from './data/projects'
+import type { Category, Contributor, ProcessSection, Project } from './data/projects'
 
 const BASE = '/api'
 
@@ -12,7 +12,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, init)
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`API ${res.status}: ${text.slice(0, 200)}`)
+    let message = `No se pudo completar la solicitud (${res.status}).`
+    try {
+      const data = JSON.parse(text) as { message?: string | string[] }
+      if (Array.isArray(data.message)) message = data.message.join('. ')
+      else if (typeof data.message === 'string' && res.status !== 500) message = data.message
+    } catch { /* Non-JSON errors use the readable default. */ }
+    throw new Error(message)
   }
   return res.json() as Promise<T>
 }
@@ -131,6 +137,12 @@ export const admin = {
 // El shape que el formulario del admin envía al API
 // (aplana el modelo: summary_es/en, sections con es/en planos).
 export interface ProjectPayload {
+  contributors?: Contributor[] | null
+  categories?: Category[]
+  creditsEs?: string | null
+  creditsEn?: string | null
+  gallery?: { url: string; es: string; en: string }[] | null
+  documentUrl?: string | null
   slug: string
   title: string
   year: number

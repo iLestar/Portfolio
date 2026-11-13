@@ -33,42 +33,43 @@ export default function Contact() {
         <form className="form" onSubmit={onSubmit}>
           <label className="form__field">
             <span className="mono">{t.contact.name}</span>
-            <input type="text" name="name" required autoComplete="name" />
+            <input type="text" name="name" minLength={2} maxLength={200} required autoComplete="name" />
           </label>
           <label className="form__field">
             <span className="mono">{t.contact.email}</span>
-            <input type="email" name="email" required autoComplete="email" />
+            <input type="email" name="email" maxLength={200} required autoComplete="email" />
           </label>
           <label className="form__field">
             <span className="mono">{t.contact.message}</span>
-            <textarea name="message" rows={6} required />
+            <textarea name="message" rows={6} minLength={5} maxLength={5000} required />
           </label>
           <button type="submit" className="btn btn--primary" disabled={state === 'sending' || state === 'sent'}>
-            {state === 'sending' ? '…' : `${t.contact.send} →`}
+            {state === 'sending' ? t.contact.sending : `${t.contact.send} →`}
           </button>
           {state === 'sent' && (
-            <p className="mono form__ok">Mensaje enviado. Te respondo pronto.</p>
+            <p className="mono form__ok" role="status">{t.contact.sent}</p>
           )}
           {state === 'error' && (
-            <p className="mono form__error">
-              No se pudo enviar — el servidor no responde. Escríbeme por redes.
+            <p className="mono form__error" role="alert">
+              {t.contact.error}
             </p>
           )}
         </form>
 
         <aside>
+          <h2 className="mono dev__subtitle">{t.contact.email}</h2>
+          <a className="contact__email" href={`mailto:${t.contact.publicEmail}`}>{t.contact.publicEmail}</a>
           <h2 className="mono dev__subtitle">{t.contact.socialsTitle}</h2>
           <ul className="lines">
             {t.contact.socials.map((s) => (
               <li key={s.name}>
-                <a href={s.url} className="contact__social">
+                <a href={s.url} className="contact__social" target="_blank" rel="noopener noreferrer">
                   {s.name}
                   <span className="mono">↗</span>
                 </a>
               </li>
             ))}
           </ul>
-          <span className="pending-tag">[PENDIENTE · URLs reales]</span>
         </aside>
       </div>
     </section>

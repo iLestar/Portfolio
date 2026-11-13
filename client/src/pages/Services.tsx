@@ -1,4 +1,5 @@
 import { useI18n } from '../i18n'
+import { Link } from 'react-router-dom'
 
 export default function Services() {
   const { t } = useI18n()
@@ -7,7 +8,7 @@ export default function Services() {
     <section className="wrap page">
       <h1 className="page__title">{t.services.title}</h1>
       <p className="page__intro">
-        {t.services.intro} <span className="pending-tag">borrador</span>
+        {t.services.intro}
       </p>
 
       <ol className="services">
@@ -19,6 +20,7 @@ export default function Services() {
           </li>
         ))}
       </ol>
+      <Link to="/contacto" className="btn btn--ghost">{t.home.ctaContact} ↗</Link>
     </section>
   )
 }

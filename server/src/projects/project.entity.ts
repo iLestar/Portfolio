@@ -33,7 +33,34 @@ export class Project {
   year: number
 
   @Column({ type: 'varchar', length: 30 })
-  category: 'branding' | 'ilustracion' | 'editorial' | 'otros'
+  category: 'branding' | 'ilustracion' | 'editorial' | 'fotografia' | 'retoque' | 'desarrollo' | 'otros'
+
+  @Column('json', { nullable: true })
+  categories: string[] | null
+
+  @Column('text', { nullable: true })
+  creditsEs: string | null
+
+  @Column('text', { nullable: true })
+  creditsEn: string | null
+
+  @Column('json', { nullable: true })
+  contributors: { name: string; url: string | null }[] | null
+
+  @Column('json', { nullable: true })
+  gallery: { url: string; es: string; en: string }[] | null
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  documentUrl: string | null
+
+  @Column({ type: 'varchar', length: 20, default: 'pending' })
+  translationStatus: string
+
+  @Column('text', { nullable: true })
+  translationError: string | null
+
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  translationSourceHash: string | null
 
   // 'result' = solo resultado final · 'process' = ficha con proceso completo
   @Column({ type: 'varchar', length: 10 })

@@ -1,7 +1,6 @@
 import { useI18n } from '../i18n'
 
-// Perfil técnico — el desarrollo tiene su propio apartado,
-// sin quitarle protagonismo al diseño (y sin esconderlo).
+// Formación previa, accesible desde Sobre mí.
 export default function Dev() {
   const { t } = useI18n()
 
@@ -26,7 +25,6 @@ export default function Dev() {
         <div className="dev__block">
           <h2 className="mono dev__subtitle">{t.dev.reposTitle}</h2>
           <p className="mono">{t.dev.reposNote}</p>
-          <span className="pending-tag">[PENDIENTE · enlaces GitHub]</span>
         </div>
       </div>
     </section>

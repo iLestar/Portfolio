@@ -16,7 +16,7 @@ export default function Projects() {
   }, [])
 
   const visible = useMemo(
-    () => (filter ? items.filter((p) => p.category === filter) : items),
+    () => (filter ? items.filter((p) => (p.categories ?? [p.category]).includes(filter)) : items),
     [items, filter],
   )
 

@@ -1,19 +1,23 @@
 import {
   IsArray,
+  ArrayMaxSize,
+  ArrayMinSize,
+  Matches,
   IsBoolean,
   IsIn,
   IsInt,
   IsOptional,
   IsString,
+  IsUrl,
   Max,
   MaxLength,
   Min,
   MinLength,
   ValidateNested,
 } from 'class-validator'
-import { Type } from 'class-transformer'
+import { Transform, Type } from 'class-transformer'
 
-const CATEGORIES = ['branding', 'ilustracion', 'editorial', 'otros'] as const
+const CATEGORIES = ['branding', 'ilustracion', 'editorial', 'fotografia', 'retoque', 'desarrollo', 'otros'] as const
 const KINDS = ['result', 'process'] as const
 const SECTION_KEYS = ['briefing', 'bocetos', 'decisiones', 'resultado'] as const
 
@@ -41,7 +45,48 @@ export class AttachmentDto {
   name: string
 }
 
-export class CreateProjectDto {
+export class GalleryDto {
+  @IsString() @Matches(/^\/uploads\/[a-zA-Z0-9._-]+$/)
+  url: string
+
+  @IsString() @MaxLength(2000)
+  es: string
+
+  @IsString() @MaxLength(2000)
+  en: string
+}
+
+export class ContributorDto {
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @IsString() @MinLength(1) @MaxLength(200)
+  name: string
+
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() || null : value)
+  @IsOptional() @IsUrl({ protocols: ['https', 'http'], require_protocol: true }) @MaxLength(1000)
+  url: string | null = null
+}
+
+export class ProjectContentDto {
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @ValidateNested({ each: true }) @Type(() => ContributorDto)
+  contributors?: ContributorDto[] | null
+
+  @IsOptional() @IsArray() @ArrayMinSize(1) @ArrayMaxSize(7) @IsIn(CATEGORIES, { each: true })
+  categories?: string[]
+
+  @IsOptional() @IsString() @MaxLength(10000)
+  creditsEs?: string | null
+
+  @IsOptional() @IsString() @MaxLength(10000)
+  creditsEn?: string | null
+
+  @IsOptional() @IsArray() @ArrayMaxSize(100) @ValidateNested({ each: true }) @Type(() => GalleryDto)
+  gallery?: GalleryDto[] | null
+
+  @IsOptional() @IsString() @Matches(/^\/uploads\/[a-zA-Z0-9._-]+\.pdf$/i)
+  documentUrl?: string | null
+}
+
+export class CreateProjectDto extends ProjectContentDto {
   @IsString()
   @MinLength(2)
   @MaxLength(120)
@@ -103,7 +148,7 @@ export class CreateProjectDto {
 
   @IsOptional()
   @IsBoolean()
-  published: boolean = true
+  published: boolean = false
 
   @IsOptional()
   @IsInt()
@@ -111,7 +156,8 @@ export class CreateProjectDto {
 }
 
 // PartialType manual: todo opcional en el update
-export class UpdateProjectDto {
+export class UpdateProjectDto extends ProjectContentDto {
+  @IsOptional() @IsBoolean() translationReviewed?: boolean
   @IsOptional() @IsString() @MinLength(2) @MaxLength(120) slug?: string
   @IsOptional() @IsString() @MinLength(2) @MaxLength(200) title?: string
   @IsOptional() @IsInt() @Min(1990) @Max(2100) year?: number

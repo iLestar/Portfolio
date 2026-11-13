@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Project } from './project.entity.js'
 import { CreateProjectDto, UpdateProjectDto } from './dto.js'
+import { translateProject, translationSourceHash } from './translation.js'
 
 // Shape que el frontend consume (igual que client/src/data/projects.ts).
 function toApi(p: Project) {
@@ -11,6 +12,13 @@ function toApi(p: Project) {
     title: p.title,
     year: p.year,
     category: p.category,
+    categories: p.categories?.length ? p.categories : [p.category],
+    credits: { es: p.creditsEs ?? '', en: p.creditsEn ?? '' },
+    contributors: p.contributors ?? [],
+    gallery: p.gallery ?? [],
+    documentUrl: p.documentUrl,
+    translationStatus: p.translationStatus,
+    translationError: p.translationError,
     kind: p.kind,
     cover: p.cover ?? undefined,
     tools: p.tools ?? [],
@@ -74,14 +82,26 @@ export class ProjectsService {
 
   async create(dto: CreateProjectDto) {
     const p = this.repo.create(dto)
-    return toApi(await this.repo.save(p))
+    await translateProject(p)
+    const saved = await this.saveWithUniqueSlug(p)
+    return { id: saved.id, ...toApi(saved) }
   }
 
   async update(id: number, dto: UpdateProjectDto) {
     const p = await this.repo.findOne({ where: { id } })
     if (!p) throw new NotFoundException(`No existe el proyecto #${id}`)
-    this.repo.merge(p, dto)
-    return toApi(await this.repo.save(p))
+    const { translationReviewed, ...changes } = dto
+    this.repo.merge(p, changes)
+    if (translationReviewed) {
+      const pairs = [[p.summaryEs, p.summaryEn], [p.bodyEs, p.bodyEn], [p.creditsEs, p.creditsEn], ...(p.gallery ?? []).map((row) => [row.es, row.en])]
+      if (pairs.some(([es, en]) => es?.trim() && !en?.trim())) throw new BadRequestException('Faltan textos en inglés para marcar la traducción como revisada.')
+      p.translationStatus = 'reviewed'
+      p.translationSourceHash = translationSourceHash(p)
+      p.translationError = null
+    }
+    await translateProject(p)
+    const saved = await this.saveWithUniqueSlug(p)
+    return { id: saved.id, ...toApi(saved) }
   }
 
   async remove(id: number) {
@@ -90,5 +110,25 @@ export class ProjectsService {
       throw new NotFoundException(`No existe el proyecto #${id}`)
     }
     return { deleted: true }
+  }
+
+  private async saveWithUniqueSlug(project: Project) {
+    const base = project.slug
+    let suffix = 1
+    let existing = await this.repo.findOne({ where: { slug: project.slug } })
+    while (existing && existing.id !== project.id) {
+      const ending = `-${++suffix}`
+      project.slug = base.slice(0, 120 - ending.length) + ending
+      existing = await this.repo.findOne({ where: { slug: project.slug } })
+    }
+    try {
+      return await this.repo.save(project)
+    } catch (error) {
+      // A simultaneous save may claim the URL after the availability check.
+      if ((error as { code?: string }).code === 'ER_DUP_ENTRY') {
+        throw new ConflictException('Otro proyecto acaba de utilizar este enlace. Vuelve a guardar para generar uno disponible.')
+      }
+      throw error
+    }
   }
 }

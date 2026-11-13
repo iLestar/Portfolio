@@ -17,7 +17,7 @@ export default function ProjectCard({
   const cls = ['card', tilt ? `card--tilt-${tilt}` : ''].join(' ').trim()
 
   return (
-    <Link to={`/proyectos/${project.slug}`} className={cls}>
+    <Link to={`/proyectos/${project.slug}`} className={cls} target="_blank" rel="noopener">
       <div className="card__media">
         {project.cover ? (
           <img src={project.cover} alt={project.title} loading="lazy" />
@@ -28,12 +28,9 @@ export default function ProjectCard({
       </div>
       <div className="card__row">
         <h3 className="card__title">{project.title}</h3>
-        <span className="card__kind mono">
-          {t.project.kind[project.kind]}
-        </span>
       </div>
       <p className="card__meta mono">
-        {t.projects.categories[project.category]} · {project.year}
+        {(project.categories ?? [project.category]).map((c) => t.projects.categories[c]).join(' · ')} · {project.year}
       </p>
       <p className="card__summary">{pick(project.summary)}</p>
     </Link>

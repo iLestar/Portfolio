@@ -8,11 +8,16 @@ const es = {
     dev: 'Dev',
     contact: 'Contacto',
     langLabel: 'Idioma',
+    skip: 'Saltar al contenido',
+    home: 'Lestar — inicio',
+    label: 'Principal',
   },
   home: {
+    role: 'Diseño gráfico',
+    statementFirst: 'entre letras',
+    statementLast: 'e imágenes.',
     claim:
-      'Diseñador gráfico en formación con criterio de sobra: branding, editorial e ilustración. ' +
-      'Aquí solo sube lo que pasó mi propio filtro.',
+      'Soy Juan Guillermo, también conocido como Lestar. Me estoy formando en diseño gráfico, con especial interés en la ilustración vectorial. También soy tecnólogo en desarrollo de software: crear un videojuego siempre ha sido una de mis metas.',
     ctaProjects: 'Ver proyectos',
     ctaContact: 'Hablemos',
     featuredTitle: 'Seleccionados',
@@ -27,6 +32,9 @@ const es = {
       ilustracion: 'Ilustración',
       editorial: 'Editorial',
       otros: 'Otros',
+      fotografia: 'Fotografía',
+      retoque: 'Retoque fotográfico',
+      desarrollo: 'Desarrollo web',
     },
   },
   project: {
@@ -52,64 +60,58 @@ const es = {
   },
   about: {
     title: 'Sobre mí',
-    // [PENDIENTE · LET] borrador — ajusta o reemplaza con tu bio real
     bio:
-      'Soy Let — también Lestar. Diseñador gráfico en formación ' +
-      '(Técnico Laboral como Asistente en Diseño Gráfico, 2.º semestre) y ' +
-      'Tecnólogo en Desarrollo de Software. Diseño marcas, editoriales e ' +
-      'ilustración con la misma obsesión con la que programo: estructura ' +
-      'primero, detalle siempre.',
+      'Soy Juan Guillermo Gómez, aunque en internet me conocen como Lestar. Lo que más disfruto del diseño es ilustrar: Illustrator es la herramienta con la que más conecto y en la que quiero seguir desarrollándome.\n\n' +
+      'Mi acercamiento al diseño gráfico comenzó en la media técnica del colegio. Al graduarme decidí estudiar desarrollo de software para acercarme a una meta que siempre he tenido: crear un videojuego. Más adelante retomé mi formación en diseño, reuniendo esos dos intereses.\n\n' +
+      'Actualmente estudio el Técnico Laboral como Asistente en Diseño Gráfico en CESDE. Ya completé el segundo semestre y comenzaré el tercero a principios de 2027.\n\n' +
+      'Me gusta que los trabajos estén pulidos. Este portafolio reúne las piezas que considero mejor logradas y muestra lo que he aprendido en ilustración, composición, edición de imágenes y diseño editorial.',
     educationTitle: 'Formación',
     education: [
       {
-        title: 'Técnico Laboral — Asistente en Diseño Gráfico',
-        detail: 'En curso · 2.º semestre de 3',
+        title: 'Asistente en Diseño Gráfico · CESDE',
+        detail: 'Segundo semestre completado · Tercer semestre previsto para enero o febrero de 2027',
       },
       {
-        title: 'Tecnólogo en Desarrollo de Software',
-        detail: 'Completado · 6 meses de práctica full stack',
+        title: 'Tecnólogo en Análisis y Desarrollo de Software · SENA',
+        detail: 'Graduado en 2023',
       },
     ],
     toolsTitle: 'Herramientas',
-    tools: ['Illustrator', 'Photoshop', 'InDesign', 'Branding', 'Briefing'],
-    devNote: 'También programo: React, NestJS, MySQL. → Ver sección Dev',
-    photoAlt: 'Foto de Let',
+    tools: ['Illustrator', 'Photoshop', 'InDesign'],
+    devNote: 'Mi formación previa en desarrollo de software ↗',
   },
   services: {
-    title: 'Servicios',
-    intro: '[PENDIENTE · LET] Qué puedo hacer por ti:',
+    title: 'Ilustración y diseño',
+    intro: 'Mi principal interés es la ilustración vectorial. Busco oportunidades laborales en diseño gráfico y también estoy abierto a encargos independientes.',
     items: [
       {
-        title: 'Identidad & Branding',
-        desc: 'Logo, sistema visual y manual de marca. Del briefing al archivo final.',
+        title: 'Ilustración vectorial',
+        desc: 'Mi enfoque principal: construir imágenes con formas, color y composición en Illustrator. Ilustraciones y piezas gráficas con una intención visual clara.',
       },
       {
-        title: 'Editorial',
-        desc: 'Publicaciones, periódicos, diagramación y sistemas de páginas.',
+        title: 'Carteles y edición de imágenes',
+        desc: 'Composición de carteles, collage digital y tratamiento de imágenes en Illustrator y Photoshop.',
       },
       {
-        title: 'Ilustración & Cartel',
-        desc: 'Piezas con carácter: carteles, portadas, gráfica para música y cultura.',
+        title: 'Diseño editorial',
+        desc: 'Maquetación de publicaciones, brochures y piezas informativas en InDesign, cuidando la jerarquía tipográfica y la relación entre texto e imagen.',
       },
       {
-        title: 'Desarrollo web',
-        desc: 'Sitios y aplicaciones donde el diseño se respeta píxel a píxel.',
+        title: 'Identidad de marca',
+        desc: 'Desarrollo de propuestas visuales, monogramas y brand boards, a partir de un brief que oriente las decisiones de diseño.',
       },
     ],
   },
   dev: {
-    title: 'Desarrollo',
+    title: 'Formación técnica',
     intro:
-      'Tecnólogo en Desarrollo de Software con 6 meses de práctica como ' +
-      'full stack. Esta sección es mi perfil técnico: qué sé, cómo trabajo ' +
-      'y qué hice en este mismo sitio.',
-    stackTitle: 'Stack de este sitio',
-    stack: ['React + TypeScript', 'NestJS', 'MySQL', 'Vite', 'CSS propio con tokens'],
+      'Soy tecnólogo en Análisis y Desarrollo de Software del SENA, graduado en 2023. Esta formación es parte de mi recorrido; actualmente mi búsqueda profesional está centrada en el diseño gráfico y la ilustración.',
+    stackTitle: 'Tecnologías de mi experiencia previa',
+    stack: ['React', 'Node.js', 'Express', 'NestJS', 'Vue', 'MySQL', 'MariaDB', 'MongoDB', 'Figma'],
     thisSite:
-      'Este portafolio es mi caso de estudio: frontend en React, API en ' +
-      'NestJS, base de datos MySQL y un panel de administración propio.',
-    reposTitle: 'Repositorios',
-    reposNote: '[PENDIENTE · LET] enlaces a GitHub',
+      'Durante mis prácticas participé en el desarrollo de una aplicación intranet para el SENA y en una migración de MongoDB a MariaDB en Divergente Soluciones Inteligente SAS.',
+    reposTitle: 'Mi enfoque actual',
+    reposNote: 'Hoy quiero seguir creciendo en ilustración vectorial y diseño gráfico. El desarrollo forma parte de mi formación previa, pero no es un servicio que ofrezca actualmente.',
   },
   contact: {
     title: 'Contacto',
@@ -118,15 +120,14 @@ const es = {
     email: 'Email',
     message: 'Mensaje',
     send: 'Enviar',
-    // Aviso honesto mientras el backend no está conectado
-    pendingNote:
-      '[PENDIENTE] El envío se activa con el backend (etapa 5). Por ahora, escríbeme directo a las redes.',
+    sending: 'Enviando…',
+    sent: 'Mensaje enviado. Te respondo pronto.',
+    error: 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.',
+    publicEmail: 'jggomez016@gmail.com',
     socialsTitle: 'Redes',
     socials: [
-      { name: 'Instagram', url: '#' },
-      { name: 'Behance', url: '#' },
-      { name: 'LinkedIn', url: '#' },
-      { name: 'GitHub', url: '#' },
+      { name: 'Instagram', url: 'https://www.instagram.com/illestar_/' },
+      { name: 'LinkedIn', url: 'https://www.linkedin.com/in/juangui-gomez/' },
     ],
   },
   notFound: {
@@ -135,8 +136,8 @@ const es = {
     back: '← Volver al inicio',
   },
   footer: {
-    made: 'Diseñado y programado por Lestar',
-    rights: 'Todos los trabajos son míos. Nada de stock.',
+    made: 'Portafolio de Juan Guillermo Gómez · Lestar',
+    rights: 'Selección de proyectos académicos y personales.',
   },
 }
 

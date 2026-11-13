@@ -1,5 +1,5 @@
 import { useI18n } from '../i18n'
-import PlaceholderImage from '../components/PlaceholderImage'
+import { Link } from 'react-router-dom'
 
 export default function About() {
   const { t } = useI18n()
@@ -9,12 +9,10 @@ export default function About() {
       <h1 className="page__title">{t.about.title}</h1>
 
       <div className="about">
-        <PlaceholderImage label={t.about.photoAlt} ratio="3 / 4" />
-
-        <div className="about__col">
-          <p className="about__bio">{t.about.bio}</p>
-          <span className="pending-tag">[PENDIENTE · bio — borrador]</span>
-
+        <div className="about__bio">
+          {t.about.bio.split('\n\n').map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+        <aside className="about__col">
           <h2 className="mono about__subtitle">{t.about.educationTitle}</h2>
           <ul className="lines">
             {t.about.education.map((e) => (
@@ -34,8 +32,8 @@ export default function About() {
             ))}
           </ul>
 
-          <p className="mono">{t.about.devNote}</p>
-        </div>
+          <Link to="/desarrollo" className="mono">{t.about.devNote}</Link>
+        </aside>
       </div>
     </section>
   )

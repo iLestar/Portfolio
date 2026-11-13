@@ -11,24 +11,23 @@ export default function Layout() {
     { to: '/proyectos', label: t.nav.projects },
     { to: '/sobre-mi', label: t.nav.about },
     { to: '/servicios', label: t.nav.services },
-    { to: '/desarrollo', label: t.nav.dev },
     { to: '/contacto', label: t.nav.contact },
   ]
 
   return (
     <div className="site">
       <a className="skip-link" href="#contenido">
-        Saltar al contenido
+        {t.nav.skip}
       </a>
 
       <header className="site-header">
         <div className="wrap site-header__row">
-          <NavLink to="/" className="brand" aria-label="Lestar — inicio">
+          <NavLink to="/" className="brand" aria-label={t.nav.home}>
             <Monogram />
             <span className="brand__word">LESTAR</span>
           </NavLink>
 
-          <nav className="nav" aria-label="Principal">
+          <nav className="nav" aria-label={t.nav.label}>
             {links.map((l) => (
               <NavLink
                 key={l.to}
