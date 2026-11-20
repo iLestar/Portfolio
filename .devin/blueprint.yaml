@@ -1,27 +1,22 @@
-# https://docs.devin.ai/onboard-devin/environment-yaml
-# Entorno del monorepo: deps de client/ y server/ + .env + MySQL por docker-compose.
+# Entorno del portafolio: frontend React y API NestJS con archivos JSON.
 initialize: |
-  # Credenciales dev del servidor; nunca sobreescribe un .env existente
   (cd server && [ -f .env ] || cp .env.example .env)
 maintenance: |
-  (cd client && npm install)
-  (cd server && npm install)
+  npm --prefix client ci
+  npm --prefix server ci
+  npm run init:data
 knowledge:
   - name: run
     contents: |
-      docker compose up -d && (cd server && npm run seed) # una vez
-      (cd server && npm run start:dev) # :3000
-      (cd client && npm run dev)       # :5173
-  - name: lint
-    contents: |
-      (cd client && npx tsc -b && npx oxlint)
-      (cd server && npx tsc -b)
+      npm run dev:server # :3000, necesita server/.env configurado
+      npm run dev:client # :5173
   - name: build
     contents: |
-      (cd client && npx vite build)
-      (cd server && npm run build)
+      npm --prefix server run build
+      npm --prefix client run build
   - name: notes
     contents: |
+      Node 24 (.nvmrc).
       Admin en /admin con ADMIN_USER/ADMIN_PASSWORD de server/.env.
-      MySQL 8.4 en docker-compose (db portfolio, user lestar / lestar_dev).
-      Necesita Node 20 (.nvmrc).
+      Proyectos y mensajes en server/data/*.json; subidas en server/uploads/.
+      Restaurar archivos de un respaldo para trabajar desde un clon nuevo.

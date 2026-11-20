@@ -30,14 +30,14 @@ export default function App() {
           <Route path="contacto" element={<Contact />} />
 
           {/* Panel de administración */}
-          <Route path="admin" element={<AdminLogin />} />
+          {import.meta.env.VITE_PUBLIC_SITE !== 'true' && <><Route path="admin" element={<AdminLogin />} />
           <Route element={<AdminGuard />}>
             <Route path="admin/panel" element={<Dashboard />} />
             <Route path="admin/panel/nuevo" element={<ProjectForm />} />
             <Route path="admin/panel/editar/:id" element={<ProjectForm />} />
             <Route path="admin/panel/vista-previa/:id" element={<ProjectDetail preview />} />
             <Route path="admin/panel/mensajes" element={<Messages />} />
-          </Route>
+          </Route></>}
 
           <Route path="*" element={<NotFound />} />
         </Route>

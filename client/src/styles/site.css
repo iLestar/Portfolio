@@ -477,6 +477,21 @@
 .admin-bar__link:hover { color: var(--purple); border-bottom-color: var(--purple); }
 .admin-bar__link.danger { color: #e86a6a; }
 .admin-new { margin-top: 2rem; }
+.publication-panel { margin-top:2rem; padding:clamp(1.2rem,3vw,2rem); border:1px solid var(--line); border-radius:var(--radius); background:var(--ink-2); }
+.publication-panel h2 { margin:.5rem 0 1rem; }
+.publication-panel p { margin:.8rem 0; max-width:75ch; overflow-wrap:anywhere; }
+.publication-panel small { color:var(--muted); display:block; line-height:1.6; }
+.publication-panel a { color:var(--blue-soft); }
+.publication-panel__actions { display:flex; flex-wrap:wrap; gap:.8rem; margin:1.3rem 0; }
+.publication-panel__actions .btn { white-space:normal; text-align:center; }
+.publication-panel__actions .btn:disabled { opacity:.55; cursor:not-allowed; }
+.publication-panel__status { padding:1rem; border:1px solid var(--line); border-radius:var(--radius); display:flex; align-items:flex-start; gap:1rem; }
+.publication-panel__status--busy { border-color:var(--blue-soft); }
+.publication-panel__status strong { display:block; color:var(--blue-soft); }
+.publication-panel__status p { margin:.4rem 0; }
+.publication-panel__spinner { flex:0 0 1.3rem; height:1.3rem; margin-top:.15rem; border:3px solid var(--line); border-top-color:var(--blue-soft); border-radius:50%; animation:publication-spin .8s linear infinite; }
+@keyframes publication-spin { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce) { .publication-panel__spinner { animation:none; } }
 .admin-list { list-style: none; padding: 0; margin-top: 1.5rem; }
 .admin-list__item {
   display: flex;
@@ -489,7 +504,9 @@
 .admin-list__item--block { align-items: flex-start; }
 .admin-list__info { display: flex; flex-direction: column; gap: 0.3rem; }
 .admin-list__info p { color: var(--muted); max-width: 60ch; }
-.admin-list__actions { display: flex; gap: 1rem; flex-shrink: 0; }
+.admin-list__actions { display: flex; flex-wrap:wrap; gap: 1rem; flex-shrink: 0; }
+.admin-list__actions button[aria-disabled="true"] { opacity:.55; cursor:wait; }
+@media (max-width:600px) { .admin-list__item { flex-wrap:wrap; } }
 
 .admin-form { max-width: 46rem; }
 .admin-form__row {

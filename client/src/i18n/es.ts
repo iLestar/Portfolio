@@ -124,6 +124,9 @@ const es = {
     sent: 'Mensaje enviado. Te respondo pronto.',
     error: 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.',
     publicEmail: 'jggomez016@gmail.com',
+    prepareEmail: 'Preparar correo',
+    subject: 'Contacto desde el portafolio de Lestar',
+    emailHint: 'Se abrirá tu aplicación de correo con este mensaje. Revísalo y envíalo desde allí, o escríbeme directamente al correo de al lado.',
     socialsTitle: 'Redes',
     socials: [
       { name: 'Instagram', url: 'https://www.instagram.com/illestar_/' },

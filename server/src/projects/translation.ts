@@ -1,4 +1,4 @@
-import type { Project } from './project.entity.js'
+import type { Project } from './project.js'
 import { Logger } from '@nestjs/common'
 import { createHash } from 'node:crypto'
 
@@ -23,7 +23,7 @@ export async function translateProject(project: Project) {
   project.translationError = null
   if (!targets.length) { project.translationStatus = 'complete'; return }
   const url = process.env.TRANSLATE_URL
-  if (!url) { project.translationError = 'Falta configurar el servicio de traducción.'; return }
+  if (!url) { project.translationError = 'La traducción automática no está configurada. Puedes completar el inglés manualmente en el panel.'; return }
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -46,7 +46,7 @@ export async function translateProject(project: Project) {
     project.translationStatus = 'error'
     project.translationError = error instanceof Error && error.name === 'TimeoutError'
       ? 'El traductor tardó más de un minuto. Vuelve a guardar para reintentar.'
-      : error instanceof TypeError ? 'No se pudo conectar con el traductor. Comprueba que Docker y LibreTranslate estén activos.'
+      : error instanceof TypeError ? 'No se pudo conectar con el servicio de traducción. Revisa TRANSLATE_URL o completa el inglés manualmente.'
       : error instanceof Error ? error.message : 'No se pudo traducir el proyecto.'
     logger.warn(`Proyecto ${project.id ?? 'nuevo'}: ${project.translationError}`)
     // Saving the original Spanish must survive a translation outage.

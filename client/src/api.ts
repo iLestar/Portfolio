@@ -1,78 +1,30 @@
 // ============================================================
-// API CLIENT — toda la comunicación con el backend en un archivo.
-// Las lecturas públicas caen al archivo local si la API no responde:
-// el portafolio no se cae aunque el servidor esté apagado.
+// El catálogo público se distribuye con el frontend.
+// Solo el editor local y la bandeja de mensajes utilizan la API.
 // ============================================================
 import { projects as localProjects, getProject as localGet } from './data/projects'
 import type { Category, Contributor, ProcessSection, Project } from './data/projects'
+import { request } from './request.ts'
+import { getToken, setToken } from './session.ts'
+export { getToken, setToken, clearToken } from './session.ts'
 
-const BASE = '/api'
+// ---------- Lectura pública estática (sin peticiones de red) ----------
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, init)
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    let message = `No se pudo completar la solicitud (${res.status}).`
-    try {
-      const data = JSON.parse(text) as { message?: string | string[] }
-      if (Array.isArray(data.message)) message = data.message.join('. ')
-      else if (typeof data.message === 'string' && res.status !== 500) message = data.message
-    } catch { /* Non-JSON errors use the readable default. */ }
-    throw new Error(message)
-  }
-  return res.json() as Promise<T>
-}
+export async function getProjects(): Promise<Project[]> { return localProjects }
 
-// ---------- Lectura pública (con respaldo local) ----------
+export async function getFeatured(): Promise<Project[]> { return localProjects.filter((p) => p.featured) }
 
-export async function getProjects(): Promise<Project[]> {
-  try {
-    return await request<Project[]>('/projects')
-  } catch {
-    return localProjects
-  }
-}
-
-export async function getFeatured(): Promise<Project[]> {
-  try {
-    return await request<Project[]>('/projects/featured')
-  } catch {
-    return localProjects.filter((p) => p.featured)
-  }
-}
-
-export async function getProject(slug: string): Promise<Project | undefined> {
-  try {
-    return await request<Project>(`/projects/${slug}`)
-  } catch {
-    return localGet(slug)
-  }
-}
-
-// ---------- Contacto ----------
-
-export function sendContact(data: { name: string; email: string; message: string }) {
-  return request<{ ok: boolean }>('/contact', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-}
+export async function getProject(slug: string): Promise<Project | undefined> { return localGet(slug) }
 
 // ---------- Admin ----------
 
-const TOKEN_KEY = 'lestar-admin'
-
-export const getToken = () => localStorage.getItem(TOKEN_KEY)
-export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t)
-export const clearToken = () => localStorage.removeItem(TOKEN_KEY)
-
 function authInit(init: RequestInit = {}): RequestInit {
+  const token = getToken()
   return {
     ...init,
     headers: {
       ...init.headers,
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: token ? `Bearer ${token}` : '',
     },
   }
 }
@@ -84,9 +36,29 @@ export type AdminProject = Project & {
   featured: boolean
   published: boolean
   sortOrder: number
+  staticExportError?: string | null
+}
+
+export interface Publication {
+  phase: 'idle' | 'preparing' | 'ready' | 'uploading' | 'uploaded' | 'published' | 'error'
+  busy: boolean
+  repository: string
+  url: string
+  settingsUrl: string
+  previewUrl: string | null
+  revision: string | null
+  projectCount: number
+  bytes: number
+  message: string
+  error: string | null
+  lastPublishedAt: string | null
 }
 
 export const admin = {
+  publication: () => request<Publication>('/publishing', authInit()),
+  preparePublication: () => request<Publication>('/publishing/prepare', { method: 'POST', ...authInit() }),
+  publish: (revision: string) => request<Publication>('/publishing/publish', { method: 'POST', ...authInit({ headers: { 'Content-Type': 'application/json' } }), body: JSON.stringify({ revision }) }),
+  checkPublication: () => request<Publication>('/publishing/check', { method: 'POST', ...authInit() }),
   async login(user: string, password: string) {
     const res = await request<{ token: string }>('/auth/login', {
       method: 'POST',

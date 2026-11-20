@@ -125,6 +125,9 @@ const en: Dict = {
     sent: "Message sent. I'll get back to you soon.",
     error: 'Your message could not be sent. Please try again later.',
     publicEmail: 'jggomez016@gmail.com',
+    prepareEmail: 'Prepare email',
+    subject: 'Contact from Lestar’s portfolio',
+    emailHint: 'Your email app will open with this message. Review and send it there, or write directly to the email address shown here.',
     socialsTitle: 'Social',
     socials: [
       { name: 'Instagram', url: 'https://www.instagram.com/illestar_/' },

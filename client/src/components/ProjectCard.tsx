@@ -20,7 +20,7 @@ export default function ProjectCard({
     <Link to={`/proyectos/${project.slug}`} className={cls} target="_blank" rel="noopener">
       <div className="card__media">
         {project.cover ? (
-          <img src={project.cover} alt={project.title} loading="lazy" />
+          <img src={project.coverThumbnail || project.cover} alt={project.title} loading="lazy" decoding="async" />
         ) : (
           <PlaceholderImage label={project.title} />
         )}

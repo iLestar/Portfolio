@@ -4,10 +4,33 @@ import { validate } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
 import { CreateProjectDto, UpdateProjectDto } from './dto.js'
 import { translateProject, translationSourceHash } from './translation.js'
-import type { Project } from './project.entity.js'
+import type { Project } from './project.js'
 import { ProjectsService } from './projects.service.js'
+import { ConfigService } from '@nestjs/config'
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { resolve, join, sep } from 'node:path'
+import { JsonFile } from '../json-file.js'
 
-afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals() })
+const directories: string[] = []
+const temporaryRoot = resolve('../tmp')
+afterEach(async () => {
+  vi.unstubAllEnvs(); vi.unstubAllGlobals()
+  for (const directory of directories.splice(0)) {
+    if (!resolve(directory).startsWith(temporaryRoot + sep)) throw new Error('Ruta temporal inesperada.')
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+async function serviceFor(items: object[], exportStatic = false) {
+  await mkdir(temporaryRoot, { recursive: true })
+  const directory = await mkdtemp(join(temporaryRoot, 'json-test-'))
+  directories.push(directory)
+  const path = join(directory, 'projects.json')
+  await writeFile(path, JSON.stringify({ nextId: Math.max(0, ...items.map((p) => (p as Project).id)) + 1, items }))
+  const client = join(directory, 'client')
+  if (exportStatic) await mkdir(join(client, 'src/data'), { recursive: true })
+  return { service: new ProjectsService(new ConfigService({ DATA_DIR: directory, STATIC_CLIENT_DIR: exportStatic ? client : '' })), path, client }
+}
 
 it('preserves reviewed English on unrelated saves and retranslates after Spanish changes', async () => {
   vi.stubEnv('TRANSLATE_URL', 'http://localhost:5000/translate')
@@ -41,8 +64,7 @@ it('accepts team names with optional web profiles and rejects blank names or uns
 it('returns saved team members and preserves the existing credit text', async () => {
   vi.stubEnv('TRANSLATE_URL', '')
   const project = { id: 1, slug: 'musea', title: 'Musea', summaryEs: '', creditsEs: 'Mi aporte: portada', tools: [] }
-  const repo = { findOne: vi.fn().mockResolvedValue(project), merge: Object.assign, save: vi.fn(async (p) => p) }
-  const service = new ProjectsService(repo as never)
+  const { service } = await serviceFor([project])
   const contributors = [{ name: 'Let', url: null }, { name: 'Mariajosé Hernández', url: 'https://www.instagram.com/example/' }]
   const saved = await service.update(1, { contributors })
   expect(saved.contributors).toEqual(contributors)
@@ -80,8 +102,7 @@ it('translates summary, credits and image captions in one request', async () => 
 })
 
 it('never exposes a draft through the public slug endpoint', async () => {
-  const repo = { findOne: vi.fn().mockResolvedValue({ slug: 'musea', published: false }) }
-  const service = new ProjectsService(repo as never)
+  const { service } = await serviceFor([{ id: 1, slug: 'musea', published: false }])
   await expect(service.findBySlug('musea')).rejects.toThrow('No existe')
 })
 
@@ -108,28 +129,58 @@ it('does not apply partial translations when the response is incomplete', async 
 it('assigns a unique URL for a new project with an existing name without overwriting it', async () => {
   vi.stubEnv('TRANSLATE_URL', '')
   const original = { id: 1, slug: 'musea' }
-  const repo = {
-    create: (dto: object) => ({ ...dto }),
-    findOne: vi.fn(async ({ where }: { where: { slug: string } }) => where.slug === 'musea' ? original : where.slug === 'musea-2' ? { id: 2, slug: 'musea-2' } : null),
-    save: vi.fn(async (p) => ({ ...p, id: 3 })),
-  }
-  const service = new ProjectsService(repo as never)
+  const { service } = await serviceFor([original, { id: 2, slug: 'musea-2' }])
   const saved = await service.create(plainToInstance(CreateProjectDto, { slug: 'musea', title: 'Musea', year: 2026, category: 'editorial', kind: 'result', summaryEs: '', summaryEn: '' }))
   expect(saved.slug).toBe('musea-3')
   expect(saved.id).toBe(3)
   expect(original.slug).toBe('musea')
 })
 
-it('keeps the URL when editing the same project and turns a simultaneous collision into 409', async () => {
+it('keeps IDs and URLs after restarting the service and serializes simultaneous saves', async () => {
   vi.stubEnv('TRANSLATE_URL', '')
   const project = { id: 1, slug: 'musea', title: 'Musea', summaryEs: '', tools: [] }
-  const repo = {
-    findOne: vi.fn().mockResolvedValue(project),
-    merge: Object.assign,
-    save: vi.fn().mockResolvedValue(project),
-  }
-  const service = new ProjectsService(repo as never)
+  const { service, path } = await serviceFor([project])
   expect((await service.update(1, {})).slug).toBe('musea')
-  repo.save.mockRejectedValueOnce({ code: 'ER_DUP_ENTRY' })
-  await expect(service.update(1, {})).rejects.toMatchObject({ status: 409 })
+  expect((await service.update(1, plainToInstance(UpdateProjectDto, { title: 'Musea revisada' }))).slug).toBe('musea')
+  const dto = plainToInstance(CreateProjectDto, { slug: 'musea', title: 'Musea', year: 2026, category: 'editorial', kind: 'result', summaryEs: '', summaryEn: '' })
+  const created = await Promise.all([service.create(dto), service.create(dto)])
+  expect(created.map((p) => p.slug)).toEqual(['musea-2', 'musea-3'])
+  const reopened = new ProjectsService(new ConfigService({ DATA_DIR: resolve(path, '..'), STATIC_CLIENT_DIR: '' }))
+  expect((await reopened.findAll()).map((p) => p.id).sort()).toEqual([1, 2, 3])
+  expect(JSON.parse(await readFile(path + '.bak', 'utf8')).items).toHaveLength(2)
+})
+
+it('updates the static catalog on publish, edit, unpublish and delete without exposing drafts', async () => {
+  vi.stubEnv('TRANSLATE_URL', '')
+  const { service, client } = await serviceFor([], true)
+  const dto = plainToInstance(CreateProjectDto, { slug: 'musea', title: 'Musea', year: 2026, category: 'editorial', kind: 'result', summaryEs: 'Revista', summaryEn: 'Magazine' })
+  const saved = await service.create(dto)
+  const catalog = async () => JSON.parse(await readFile(join(client, 'src/data/projects.json'), 'utf8'))
+  expect(await catalog()).toEqual([])
+  const published = await service.update(saved.id, { published: true })
+  expect(published.staticExportError).toBeNull()
+  expect((await catalog())[0].title).toBe('Musea')
+  expect((await catalog())[0]).not.toHaveProperty('id')
+  await service.update(saved.id, { title: 'Musea revisada' })
+  expect((await catalog())[0].title).toBe('Musea revisada')
+  await service.update(saved.id, { published: false })
+  expect(await catalog()).toEqual([])
+  expect((await service.findAll())[0]).toMatchObject({ id: saved.id, title: 'Musea revisada', published: false })
+  await expect(service.findBySlug('musea')).rejects.toThrow('No existe')
+  await service.update(saved.id, { published: true })
+  expect((await catalog())[0].title).toBe('Musea revisada')
+  expect((await service.findAll())[0].id).toBe(saved.id)
+  await service.remove(saved.id)
+  expect(await service.findAll()).toEqual([])
+})
+
+it('does not truncate JSON after a failed change or silently replace corrupted content', async () => {
+  const { path } = await serviceFor([])
+  const store = new JsonFile<Project>(path)
+  const original = await readFile(path, 'utf8')
+  await expect(store.update((data) => { data.nextId++; throw new Error('Invalid update') })).rejects.toThrow('Invalid update')
+  expect(await readFile(path, 'utf8')).toBe(original)
+  await writeFile(path, '{truncated')
+  await expect(store.update(() => {})).rejects.toThrow()
+  expect(await readFile(path, 'utf8')).toBe('{truncated')
 })

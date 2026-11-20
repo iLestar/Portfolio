@@ -64,7 +64,7 @@ export default function ProjectDetail({ preview = false }: { preview?: boolean }
       {!!project.gallery?.length && <section className="project-gallery" aria-label={t.project.gallery}>
         <h2>{lang === 'es' ? 'Una mirada al proyecto' : 'A closer look'}</h2>
         {project.gallery.map((image) => <figure key={image.url}>
-          <a href={image.url} target="_blank" rel="noopener"><img src={image.url} alt={pick(image)} loading="lazy" /></a>
+          <a href={image.url} target="_blank" rel="noopener"><img src={image.thumbnail || image.url} alt={pick(image)} loading="lazy" decoding="async" /></a>
           <figcaption>{pick(image)}</figcaption>
         </figure>)}
       </section>}
