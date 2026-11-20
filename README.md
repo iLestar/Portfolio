@@ -1,129 +1,83 @@
 # Lestar — Portafolio
 
-Portafolio web de **Let (Lestar)**: diseño gráfico (branding, editorial, ilustración) con sección de desarrollo. Sitio bilingüe ES/EN, tema oscuro, dirección visual "editorial cinética".
+Portafolio de **Juan Guillermo Gómez**, diseñador gráfico conocido como **Lestar**.
+Reúne trabajos de ilustración vectorial, diseño editorial, identidad de marca y
+edición de imágenes, con información sobre cada proyecto y los aportes en equipo.
 
-## Stack
+**[Ver el portafolio →](https://ilestar.github.io/Portfolio/)**
 
-| Pieza | Tecnología | Carpeta |
-|---|---|---|
-| Frontend + panel admin | React 19 + TypeScript + Vite + CSS propio (tokens) | `client/` |
-| API | NestJS 12 + TypeORM | `server/` |
-| Base de datos | MySQL 8.4 (Docker en dev) | `docker-compose.yml` |
+El sitio está disponible en español e inglés. Incluye galerías, publicaciones PDF
+y archivos descargables. Las tarjetas y miniaturas utilizan WebP; los originales
+se conservan para ver los trabajos en detalle.
 
-```
-lestar-portfolio/
-├── client/      ← el sitio público Y el panel /admin
-├── server/      ← API REST + auth JWT + subida de imágenes
-├── docker-compose.yml
-└── proposal/    ← mockups y monograma de la propuesta inicial
-```
+## Cómo se administra
 
-## Requisitos (Windows 11)
+La web pública funciona en GitHub Pages. Para crear o editar proyectos se utiliza
+un panel privado en el computador, con inicio de sesión y almacenamiento en JSON.
+El panel no está disponible en la web publicada.
 
-1. **Node.js 20 LTS** — https://nodejs.org (instala el LTS; verifica con `node -v` → debe empezar en `v20`).
-2. **Docker Desktop** — para la base de datos (https://docs.docker.com/desktop/setup/install/windows-install/).
-   - Alternativa sin Docker: instala MySQL 8 manualmente y crea la base `portfolio` con usuario `lestar` / clave `lestar_dev`, o ajusta `server/.env` a tu instalación.
-3. **Git** — https://git-scm.com.
+### Iniciar el editor
 
-## Instalación (una vez)
+Desde la carpeta del proyecto, abre dos terminales:
+
+**Backend**
 
 ```powershell
-cd lestar-portfolio
-
-# 1) Dependencias
-npm --prefix client install
-npm --prefix server install
-
-# 2) Base de datos
-docker compose up -d
-
-# 3) Config del servidor
-cd server
-copy .env.example .env     # edita ADMIN_USER / ADMIN_PASSWORD / JWT_SECRET
-npm run seed               # carga proyectos de ejemplo (opcional)
-cd ..
+npm run dev:server
 ```
 
-## Ejecutar (cada sesión de trabajo)
-
-Necesitas **3 terminales** (o pestañas):
+**Frontend**
 
 ```powershell
-# Terminal 1 — base de datos (si no quedó corriendo)
-docker compose up -d
-
-# Terminal 2 — API en http://localhost:3000/api
-npm --prefix server run start:dev
-
-# Terminal 3 — sitio en http://localhost:5173
-npm --prefix client run dev
+npm run dev:client
 ```
 
-Abre http://localhost:5173 — el panel está en http://localhost:5173/admin
+Abre el [panel local](http://localhost:5173/admin) e inicia sesión con las
+credenciales configuradas en `server/.env`.
 
-## Panel de administración
+### Actualizar el portafolio
 
-- Login: usuario/clave de `server/.env` (`ADMIN_USER` / `ADMIN_PASSWORD`).
-- Desde el panel: **crear, editar, publicar/despublicar, destacar y borrar** proyectos, subir portada e imágenes de proceso, y leer los mensajes del formulario de contacto.
-- Los cambios aparecen en el sitio público de inmediato (si el servidor está apagado, el sitio muestra los datos de `client/src/data/projects.ts` como respaldo).
+1. Crea o edita una ficha y guarda los cambios. Los borradores quedan fuera de la web pública.
+2. En el panel, pulsa **Preparar vista previa**.
+3. Abre la vista previa y revisa el resultado.
+4. Pulsa **Publicar en internet** y espera a que el panel confirme la publicación.
 
-## Agregar un proyecto nuevo
+Guardar una ficha actualiza la copia local; publicar envía la versión revisada a
+GitHub Pages. Después, la web sigue funcionando con el computador apagado.
 
-1. Entra a `/admin` → **+ Nuevo proyecto**.
-2. Escribe el título (el slug/URL se genera solo).
-3. Elige **tipo de ficha**:
-   - *Resultado final* → solo resumen + texto + portada.
-   - *Proceso completo* → además habilita las secciones Briefing → Bocetos → Decisiones → Resultado, cada una con imagen y texto ES/EN.
-4. Sube la portada (JPG/PNG/WebP/AVIF) y, si quieres, **archivos adjuntos** (PDF, INDD, IDML, AI, PSD, ZIP — máx. 100 MB c/u; se muestran como enlaces descargables en la ficha, el PDF se abre en el visor del navegador).
-5. Marca *Destacado* para que salga en la home, *Publicado* para que sea visible.
-6. Guardar. Listo — ya está en `/proyectos` y en su URL `/proyectos/<slug>`.
+**Publicar la web no respalda los cambios del código fuente.** Estos se guardan
+por separado mediante commits y se integran en `main` mediante un PR. El sitio
+compilado se envía a la rama `gh-pages`.
 
-## Estructura del código (dónde tocar qué)
+## Respaldo y cambio de equipo
 
-| Quieres cambiar… | Archivo |
-|---|---|
-| Colores, fuentes, espaciado | `client/src/styles/tokens.css` |
-| Estilos del sitio | `client/src/styles/site.css` (por secciones) |
-| Textos de la interfaz ES/EN | `client/src/i18n/es.ts` · `en.ts` |
-| Contenido de respaldo | `client/src/data/projects.ts` |
-| Esquema de la base | `server/src/projects/project.entity.ts` |
-| Credenciales/puertos | `server/.env` |
-
-## Despliegue (cuando toque)
-
-- **Frontend:** `npm --prefix client run build` → `client/dist/` estático (Vercel, Netlify, Cloudflare Pages gratis).
-- **Backend:** `npm --prefix server run build && npm --prefix server run start:prod` + MySQL gestionada (Railway, Render, un VPS…).
-- En producción: `synchronize: false` en `server/src/app.module.ts` y credenciales reales por variables de entorno.
-
-## Traducción automática local
-
-Ejecuta `docker compose up -d libretranslate` y configura en `server/.env`:
-
-```env
-TRANSLATE_URL=http://127.0.0.1:5000/translate
+```powershell
+npm run backup
 ```
 
-Reinicia la API después de cambiar `.env`. La primera ejecución descarga los modelos de español e inglés;
-se conservan en el volumen `lestar_translate_models`. El puerto 5000 solo es accesible desde el equipo local.
-Al guardar un proyecto se traducen resumen, descripción, créditos y pies de imagen.
-La lista de integrantes y sus enlaces no se envían al traductor; los créditos en texto sí se traducen.
-Si el servicio falla, se conserva el español y el inglés anterior; el aviso de guardado muestra el motivo.
-Los proyectos anteriores deben volver a guardarse para traducirse con la nueva configuración.
-Las traducciones marcadas como revisadas se conservan al guardar mientras no cambien
-los textos originales en español ni la selección de imágenes. Si cambia el contenido,
-se vuelve a generar la traducción y debe revisarse de nuevo.
+Genera un respaldo fechado en `D:\Descargas\Documents\RespaldosPortfolio`.
+Los proyectos privados y borradores están en `server/data/`, y los archivos
+originales en `server/uploads/`. Estas carpetas están excluidas de Git: clonar el
+repositorio no recupera por sí solo todo el contenido del editor. Conserva también
+una copia privada de `server/.env`.
 
-## Respaldo local
+Para instalar en otro equipo, utiliza Node.js 24 o posterior:
 
-Con Docker Desktop y MySQL activos, ejecuta `npm run backup` desde la raíz.
-El comando guarda un ZIP fechado en `D:\Descargas\Documents\RespaldosPortfolio` con la base MySQL,
-`server/uploads`, instrucciones de restauración y un manifiesto de hashes SHA-256.
-Verifica cada archivo del ZIP antes de dar el respaldo por terminado.
-Para otra ubicación: `npm run backup -- -Destination "D:\OtraCarpeta"`.
-El respaldo contiene los datos y archivos subidos; el código y la configuración `.env` se conservan por separado.
+```powershell
+npm --prefix client ci
+npm --prefix server ci
+```
 
-## Pendientes conocidos
+Restaura los datos y archivos desde el respaldo y configura `server/.env` a partir
+de `server/.env.example`. `npm run init:data` permite iniciar los JSON desde el
+catálogo público si no hay un respaldo; no recupera los borradores ni los archivos
+originales ausentes.
 
-- Los textos marcados `[PENDIENTE]` son placeholders a reemplazar desde el panel.
-- El formulario de contacto guarda mensajes en la base (se leen en el panel); envío por email es una mejora futura.
-- Imágenes: se sirven de `server/uploads/` en dev; en producción conviene un almacenamiento externo.
+## Sobre el código
+
+- **Frontend:** React, TypeScript y Vite, con un catálogo público que funciona sin la API.
+- **Editor local:** NestJS, autenticación y archivos JSON; no requiere MySQL ni Docker.
+- **Publicación:** GitHub Pages, con una vista previa antes de enviar los cambios.
+
+Más detalles: [publicación desde el panel](docs/publicar-en-internet.md) y
+[funcionamiento del frontend estático](docs/frontend-estatico.md).

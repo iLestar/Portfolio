@@ -12,3 +12,7 @@ server/uploads
 *.tsbuildinfo
 /tmp/
 /proposal/
+
+# Copia generada de los archivos públicos; incluida en client/dist al compilar.
+/client/public/uploads/
+/server/data/

@@ -1,17 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { admin, getToken } from '../../api'
 import type { FormEvent } from 'react'
 
 // Login del panel — un solo usuario (definido en server/.env).
 export default function AdminLogin() {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  if (getToken()) {
-    navigate('/admin/panel', { replace: true })
-  }
+  if (getToken()) return <Navigate to="/admin/panel" replace />
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -31,6 +30,7 @@ export default function AdminLogin() {
   return (
     <section className="wrap page admin-login">
       <h1 className="page__title">Panel</h1>
+      {params.get('sesion') === 'expirada' && <p role="status">Tu sesión caducó o dejó de ser válida. Vuelve a iniciar sesión.</p>}
       <form className="form" onSubmit={onSubmit}>
         <label className="form__field">
           <span className="mono">Usuario</span>

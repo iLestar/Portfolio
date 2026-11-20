@@ -1,27 +1,14 @@
-import { useState } from 'react'
 import { useI18n } from '../i18n'
-import { sendContact } from '../api'
 
-// Formulario real → POST /api/contact (los mensajes caen en MySQL
-// y se leen en el panel, sección Mensajes).
+// Prepara un correo; no envía ni guarda mensajes en un servidor.
 export default function Contact() {
   const { t } = useI18n()
-  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setState('sending')
     const data = new FormData(e.currentTarget)
-    try {
-      await sendContact({
-        name: String(data.get('name')),
-        email: String(data.get('email')),
-        message: String(data.get('message')),
-      })
-      setState('sent')
-    } catch {
-      setState('error')
-    }
+    const body = `${t.contact.name}: ${data.get('name')}\n${t.contact.email}: ${data.get('email')}\n\n${data.get('message')}`
+    window.location.href = `mailto:${t.contact.publicEmail}?subject=${encodeURIComponent(t.contact.subject)}&body=${encodeURIComponent(body)}`
   }
 
   return (
@@ -43,17 +30,10 @@ export default function Contact() {
             <span className="mono">{t.contact.message}</span>
             <textarea name="message" rows={6} minLength={5} maxLength={5000} required />
           </label>
-          <button type="submit" className="btn btn--primary" disabled={state === 'sending' || state === 'sent'}>
-            {state === 'sending' ? t.contact.sending : `${t.contact.send} →`}
+          <p>{t.contact.emailHint}</p>
+          <button type="submit" className="btn btn--primary">
+            {t.contact.prepareEmail} →
           </button>
-          {state === 'sent' && (
-            <p className="mono form__ok" role="status">{t.contact.sent}</p>
-          )}
-          {state === 'error' && (
-            <p className="mono form__error" role="alert">
-              {t.contact.error}
-            </p>
-          )}
         </form>
 
         <aside>

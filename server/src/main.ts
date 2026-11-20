@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
-import { join } from 'path'
+import { uploadsDirectory } from './storage-paths.js'
 import { AppModule } from './app.module.js'
 
 async function bootstrap() {
@@ -9,13 +9,14 @@ async function bootstrap() {
 
   // Todas las rutas bajo /api (el proxy de Vite ya apunta ahí).
   app.setGlobalPrefix('api')
-  app.enableCors()
+  // En producción, servir la web y /api desde el mismo origen.
+  if (process.env.NODE_ENV !== 'production') app.enableCors()
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, transform: true }),
   )
 
   // Las imágenes que sube el admin se sirven en /uploads/*
-  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads/' })
+  app.useStaticAssets(uploadsDirectory(), { prefix: '/uploads/' })
 
   const port = Number(process.env.PORT ?? 3000)
   await app.listen(port)

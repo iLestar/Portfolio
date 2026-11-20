@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
-import { extname, join } from 'path'
+import { extname } from 'path'
+import { uploadsDirectory } from '../storage-paths.js'
 import { existsSync, mkdirSync } from 'fs'
 import { JwtAuthGuard } from '../auth/jwt.guard.js'
 
-const UPLOADS_DIR = join(process.cwd(), 'uploads')
 // Imágenes (portadas, secciones) + adjuntos de proyecto (PDF, fuentes de diseño).
 // Un .indd/.ai/.psd no se puede previsualizar en el navegador: se ofrece descargable.
 const ALLOWED = new Set([
@@ -30,6 +30,7 @@ export class UploadsController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: (_req, _file, cb) => {
+          const UPLOADS_DIR = uploadsDirectory()
           if (!existsSync(UPLOADS_DIR)) mkdirSync(UPLOADS_DIR, { recursive: true })
           cb(null, UPLOADS_DIR)
         },
